@@ -1,12 +1,37 @@
 const inquirer = require("inquirer");
+const express = require("express")
 const mysql = require("mysql2");
+const db = require("./db/connection");
 
-mysql.createConnection({
+const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role"];
 
-        host: 'localhost',
-        user: 'root',
-        password: require("./db_password/password"),
-        database: 'employee_tracker'
-    },
-    console.log("CONNECTED TO DATABASE SUCCESSFULLY")
-)
+const displayOptions = ()=>{
+
+    return inquirer.prompt([
+        {
+            type:"list",
+            name: "optionPicked",
+            message:"********************************Welcome to the Employee Tracker App**********************************",
+            choices: choices
+        }
+    ])
+}
+displayOptions().then(answers=>{
+   const option = answers.optionPicked;
+   const sql = "SELECT * FROM department";
+   if(option === choices[0]){
+        db.query(sql, function (err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+    });
+   }
+   
+})
+
+
+
+//making a connection
+db.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected to DB")
+});
