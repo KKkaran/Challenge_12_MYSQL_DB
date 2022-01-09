@@ -1,6 +1,6 @@
 CREATE TABLE department(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL
+    depart_name VARCHAR(30) NOT NULL
 );
 CREATE TABLE role (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -14,6 +14,6 @@ CREATE TABLE employee (
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     role_id INTEGER NOT NULL,
-    manager_id INTEGER NOT NULL,
+    manager_id INTEGER,
     CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES role(id)
 );

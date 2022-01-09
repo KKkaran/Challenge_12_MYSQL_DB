@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const express = require("express")
 const mysql = require("mysql2");
 const db = require("./db/connection");
-
+const table = require("string-table")
 const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role"];
 
 const displayOptions = ()=>{
@@ -22,16 +22,19 @@ displayOptions().then(answers=>{
    if(option === choices[0]){
         db.query(sql, function (err, result, fields) {
             if (err) throw err;
-            console.log(result);
+            console.log(table.create(result));
     });
    }
    
 })
 
 
+// //making a connection
+// db.connect(function(err) {
+//     if (err) throw err;
+//     console.log("Connected to DB")
+// });
 
-//making a connection
-db.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected to DB")
-});
+
+
+
