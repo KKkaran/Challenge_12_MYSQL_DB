@@ -24,6 +24,12 @@ displayOptions().then(answers=>{
             if (err) throw err;
             console.log(table.create(result));
     });
+   }else if(option === choices[1]){
+       const sql = "SELECT r.*, d.depart_name FROM role AS r LEFT JOIN department AS d ON r.department_id = d.id ORDER BY d.id;";
+        db.query(sql, function (err, result, fields) {
+            if (err) throw err;
+            console.log(table.create(result));
+});
    }
    
 })
