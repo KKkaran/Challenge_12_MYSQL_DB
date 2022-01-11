@@ -6,6 +6,19 @@ const table = require("string-table");
 const res = require("express/lib/response");
 const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","QUIT"];
 
+
+
+const getdepartment = async()=>{
+    return new Promise((res,rej)=>{
+        const sql = "SELECT * FROM department";
+        var g;
+        db.query(sql, function (err, result, fields) {
+            if (err) throw err;
+            g = result.map(r=>r.depart_name)
+            res(g)
+        });
+    })  
+}
 const displayOptions = ()=>{
 
     return inquirer.prompt([
@@ -43,7 +56,43 @@ const addDepartment = ()=>{
         })   
     })
 }
-
+const addRole = ()=>{
+    getdepartment()
+    return inquirer.prompt([
+        {
+            type:"input",
+            name: "title",
+            message:"Type the name of the role you wish to add: (Required)",
+            validate: (data)=>{
+                if(data) return true
+                else {
+                    console.log("Please Enter the Role title:")
+                }
+            }
+        },
+        {
+            type:"input",
+            name: "salary",
+            message:"Type the salary for your title: (Required)",
+            validate: (data)=>{
+                if(data) return true
+                else {
+                    console.log("Please Enter the Role salary:")
+                }
+            }
+        },
+        {
+            type:"list",
+            name: "department",
+            message:"What department you wish to add this role to: (Required)",
+            choices: ()=> getdepartment().then(s=>s)
+        }
+    ]).then(ans=>{
+        console.log(ans)
+    }).catch(err=>{
+        console.log(err)
+    })
+}
 displayOptions().then(answers=>{
    const option = answers.optionPicked;
    const sql = "SELECT * FROM department";
@@ -70,7 +119,8 @@ displayOptions().then(answers=>{
         
 
    }else if(option === choices[4]){//add a role
-
+        console.log("adding a role")
+        addRole()
    }else if(option === choices[7]){
         console.log("Program is ended.")
    }
