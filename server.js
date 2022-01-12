@@ -7,11 +7,11 @@ const res = require("express/lib/response");
 const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","QUIT"];
 
 
+var g; //list of all departments
 
 const getdepartment = async()=>{
     return new Promise((res,rej)=>{
         const sql = "SELECT * FROM department";
-        var g;
         db.query(sql, function (err, result, fields) {
             if (err) throw err;
             g = result.map(r=>r.depart_name)
@@ -87,8 +87,20 @@ const addRole = ()=>{
             message:"What department you wish to add this role to: (Required)",
             choices: ()=> getdepartment().then(s=>s)
         }
+        
     ]).then(ans=>{
-        console.log(ans)
+        let {title,salary,department} = ans;
+        let values = [title,salary,(g.indexOf(department)+1)]
+        const sql = "INSERT INTO role (title,salary,department_id) VALUES (?,?,?);"
+        db.query(sql,values,(err,result)=>{
+            if(err){
+                console.log(err)
+            }else if(!result.affectedRows){
+                console.log("nothing added")
+            }else{
+                console.log("Your Role has been added to the Table.")
+            }
+        })   
     }).catch(err=>{
         console.log(err)
     })
