@@ -9,6 +9,7 @@ const choices = ["View all Departments","View all Roles","View all Employees","A
 
 var g; //list of all departments
 
+//gets all the departments from db
 const getdepartment = async()=>{
     return new Promise((res,rej)=>{
         const sql = "SELECT * FROM department";
@@ -30,6 +31,7 @@ const displayOptions = ()=>{
         }
     ])
 }
+//for adding department to the db
 const addDepartment = ()=>{
     return inquirer.prompt([
         {
@@ -56,6 +58,7 @@ const addDepartment = ()=>{
         })   
     })
 }
+//for adding role to the db
 const addRole = ()=>{
     getdepartment()
     return inquirer.prompt([
@@ -105,6 +108,10 @@ const addRole = ()=>{
         console.log(err)
     })
 }
+//for adding an employee
+const addEmployee = ()=>{
+
+}
 displayOptions().then(answers=>{
    const option = answers.optionPicked;
    const sql = "SELECT * FROM department";
@@ -127,12 +134,12 @@ displayOptions().then(answers=>{
         });
    }else if(option === choices[3]){//add a department
         addDepartment()
-        
-        
-
    }else if(option === choices[4]){//add a role
-        console.log("adding a role")
         addRole()
+   }else if(option === choices[5]){//add an employee
+        
+   }else if(option === choices[6]){//update an employee
+
    }else if(option === choices[7]){
         console.log("Program is ended.")
    }
