@@ -29,7 +29,7 @@ const getRoles = async(id)=>{//we will pass the department and get the roles for
         });
     })  
 }
-const getManager = async(id)=>{
+const getManager = async(id)=>{//we will get the designated manager for a department
     return new Promise((res,rej)=>{
         const sql = "select e.* from employee as e left join role as r on e.role_id = r.id left join department as d on r.department_id = d.id where r.title = 'Operations Mgr' and d.id = ?;";
         db.query(sql,id, function (err, result, fields) {
