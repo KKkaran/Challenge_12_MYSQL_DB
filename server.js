@@ -6,7 +6,7 @@ const table = require("string-table");
 const res = require("express/lib/response");
 const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","QUIT"];
 
-
+console.log("********************************Welcome to the Employee Tracker App**********************************")
 var g; //list of all departments
 
 //gets all the departments from db
@@ -44,7 +44,7 @@ const displayOptions = ()=>{
         {
             type:"list",
             name: "optionPicked",
-            message:"********************************Welcome to the Employee Tracker App**********************************",
+            message:"Pick an option:",
             choices: choices
         }
     ])
@@ -73,6 +73,8 @@ const addDepartment = ()=>{
             }else{
                 console.log("Your Department has been added to the Table.")
             }
+            console.log("\n\n")
+            j();
         })   
     })
 }
@@ -121,6 +123,8 @@ const addRole = ()=>{
             }else{
                 console.log("Your Role has been added to the Table.")
             }
+            console.log("\n\n")
+            j();
         })   
     }).catch(err=>{
         console.log(err)
@@ -194,7 +198,11 @@ const addEmployee = ()=>{
                             console.log("You are added to the Db and you will be reporting to " + f.first_name + " " + f.last_name);
                         })
                         roleid = b[0].id;
-                        managerid = fg[0].id;
+                        if(fg.length === 0){
+                            console.log("no manager for this department yet")
+                        }else{
+                            managerid = fg[0].id;
+                        }
                         //console.log(answer.fname,answer.lname,b[0].id,fg[0].id)
                         res( {
                             fn:answer.fname,
@@ -278,31 +286,41 @@ const updateEmp = ()=>{
         })
     })
 }
-displayOptions().then(answers=>{
-   const option = answers.optionPicked;
-   const sql = "SELECT * FROM department";
-   if(option === choices[0]){//show all departments
+
+const j = ()=>{
+
+    displayOptions().then(answers=>{
+    const option = answers.optionPicked;
+    const sql = "SELECT * FROM department";
+    if(option === choices[0]){//show all departments
         db.query(sql, function (err, result, fields) {
             if (err) throw err;
             console.log(table.create(result));
-    });
-   }else if(option === choices[1]){//show all roles
+            console.log("\n\n")
+            j();
+        });
+        
+    }else if(option === choices[1]){//show all roles
         const sql = "SELECT r.*, d.depart_name FROM role AS r LEFT JOIN department AS d ON r.department_id = d.id ORDER BY d.id;";
         db.query(sql, function (err, result, fields) {
             if (err) throw err;
             console.log(table.create(result));
-    });
-   }else if(option === choices[2]){//show all employees
+            console.log("\n\n")
+            j();
+        });
+    }else if(option === choices[2]){//show all employees
         const sql = 'SELECT e.id, e.first_name, e.last_name, r.title, r.salary, d.depart_name, CONCAT(f.first_name," ",f.last_name) AS Manager FROM employee AS e LEFT JOIN role AS r ON e.role_id = r.id LEFT JOIN department AS d ON r.department_id = d.id LEFT JOIN employee AS f ON e.manager_id = f.id;';
         db.query(sql, function (err, result, fields) {
             if (err) throw err;
             console.log(table.create(result));
+            console.log("\n\n")
+            j();
         });
-   }else if(option === choices[3]){//add a department
+    }else if(option === choices[3]){//add a department
         addDepartment()
-   }else if(option === choices[4]){//add a role
+    }else if(option === choices[4]){//add a role
         addRole()
-   }else if(option === choices[5]){//add an employee
+    }else if(option === choices[5]){//add an employee
         addEmployee().then(f=>{
             const sql = "INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?);"
             db.query(sql,[f.fn,f.ln,f.rid,f.mid],(err,result)=>{
@@ -313,9 +331,11 @@ displayOptions().then(answers=>{
                 }else{
                     console.log("Your Employee has been added to the Table.")
                 }
+                console.log("\n\n")
+                j();
             })   
         })
-   }else if(option === choices[6]){//update an employee
+    }else if(option === choices[6]){//update an employee
         updateEmp().then(f=>{
             console.log(f.rid,f.mid,f.id)
             const sql = "UPDATE employee SET role_id = ?, manager_id = ? WHERE id = ?;";
@@ -327,24 +347,17 @@ displayOptions().then(answers=>{
                 }else{
                     console.log("The employee's role has been updated in the Database.")
                 }
+                console.log("\n\n")
+                j();
             })   
         });
 
-   }else if(option === choices[7]){
-        console.log("Program is ended.")
-   }
-   
-})
+    }else if(option === choices[7]){
+        console.log("***************************************Program has now ended.***************************************")
+    }
+   })
+}
 
-
-// //making a connection
-// db.connect(function(err) {
-//     if (err) throw err;
-//     console.log("Connected to DB")
-// });
-
-
-
-
+j();
 //BONUS EXERCISES:
 // view empl by manager-----> SELECT e.id, e.first_name,e.last_name, r.title, r.salary, d.depart_name, concat(f.first_name," ",f.last_name) as Manager from employee as e left join role as r on e.role_id = r.id left join department as d on r.department_id = d.id left join employee as f on e.manager_id = f.id where f.first_name = "Jessica";
