@@ -171,7 +171,7 @@ const addEmployee = ()=>{
                     
                 }
             ]).then(rolePicked=>{
-                let fn,ln,roleid,managerid;
+                let roleid,managerid;
                 const b = f.filter(p=>{//we are getting the role id
                     if(p.title === rolePicked.role){
                         return p
@@ -183,8 +183,8 @@ const addEmployee = ()=>{
                     managerid = 1;
                     //console.log(answer.fname,answer.lname,b[0].id,1)
                     res( {
-                        fn : answer.fname,
-                        ln : answer.lname,
+                        fn:answer.fname,
+                        ln:answer.lname,
                         rid: roleid,
                         mid: managerid
                     })
@@ -197,8 +197,8 @@ const addEmployee = ()=>{
                         managerid = fg[0].id;
                         //console.log(answer.fname,answer.lname,b[0].id,fg[0].id)
                         res( {
-                            fn : answer.fname,
-                            ln : answer.lname,
+                            fn:answer.fname,
+                            ln:answer.lname,
                             rid: roleid,
                             mid: managerid
                         })
@@ -208,6 +208,75 @@ const addEmployee = ()=>{
         })
     })
 })
+}
+//updating the employee
+const updateEmp = ()=>{
+    return new Promise((res,rej)=>{
+
+        inquirer.prompt([
+            {
+                type:"input",
+                name:"id",
+                message:"What is the employee id : Required",
+                validate: (data)=>{
+                    if(data) return true
+                    else {
+                        console.log("Please Enter the Employee id:")
+                    }
+                }
+            },
+            {
+                type:"rawlist",
+                name:"depart",
+                message:"What new department do you wish to go to:Required",
+                choices: ()=> getdepartment().then(s=>s)
+            }
+        ]).then(answer=>{
+            getRoles(g.indexOf(answer.depart)+1).then(f=>{
+                return inquirer.prompt([
+                    {
+                        type:"rawlist",
+                        name:"role",
+                        message:"Below is a list of roles for the department you picked:Required",
+                        choices: ()=> f.map(g=>g.title)
+                        
+                    }
+                ]).then(rolePicked=>{
+                    let fn,ln,roleid,managerid;
+                    const b = f.filter(p=>{//we are getting the role id
+                        if(p.title === rolePicked.role){
+                            return p
+                        }
+                    })
+                    if(rolePicked.role === "Operations Mgr"){
+                        //console.log("Since you are adding a manager, this employee will be reporting to the CEO 'Dwayne Johnson'directly.")
+                        roleid = b[0].id;
+                        managerid = 1;
+                        //console.log(answer.fname,answer.lname,b[0].id,1)
+                        res( {
+                            id: answer.id,
+                            rid: roleid,
+                            mid: managerid
+                        })
+                    }else{
+                        getManager(g.indexOf(answer.depart)+1).then(fg=>{
+                            fg.forEach(f=>{
+                                //console.log("You are added to the Db and you will be reporting to " + f.first_name + " " + f.last_name);
+                            })
+                            roleid = b[0].id;
+                            managerid = fg[0].id;
+                            //console.log(answer.fname,answer.lname,b[0].id,fg[0].id)
+                            res( {
+                                id:answer.id,
+                                rid: roleid,
+                                mid: managerid
+                            })
+                        })
+                    }
+                })
+            })
+        })
+    })
 }
 displayOptions().then(answers=>{
    const option = answers.optionPicked;
@@ -244,9 +313,22 @@ displayOptions().then(answers=>{
                 }else{
                     console.log("Your Employee has been added to the Table.")
                 }
-        })   
+            })   
         })
    }else if(option === choices[6]){//update an employee
+        updateEmp().then(f=>{
+            console.log(f.rid,f.mid,f.id)
+            const sql = "UPDATE employee SET role_id = ?, manager_id = ? WHERE id = ?;";
+            db.query(sql,[f.rid,f.mid,f.id],(err,result)=>{
+                if(err){
+                    console.log(err)
+                }else if(!result.affectedRows){
+                    console.log("Error performing the operation.")
+                }else{
+                    console.log("The employee's role has been updated in the Database.")
+                }
+            })   
+        });
 
    }else if(option === choices[7]){
         console.log("Program is ended.")
