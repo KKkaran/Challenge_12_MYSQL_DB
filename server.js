@@ -4,6 +4,7 @@ const mysql = require("mysql2");
 const db = require("./db/connection");
 const table = require("string-table");
 const res = require("express/lib/response");
+const { end } = require("./db/connection");
 const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","QUIT"];
 
 console.log("********************************Welcome to the Employee Tracker App**********************************")
@@ -272,7 +273,11 @@ const updateEmp = ()=>{
                                 //console.log("You are added to the Db and you will be reporting to " + f.first_name + " " + f.last_name);
                             })
                             roleid = b[0].id;
-                            managerid = fg[0].id;
+                            if(fg.length === 0){
+                                console.log("no manager for this department yet")
+                            }else{
+                                managerid = fg[0].id;
+                            }
                             //console.log(answer.fname,answer.lname,b[0].id,fg[0].id)
                             res( {
                                 id:answer.id,
@@ -354,6 +359,7 @@ const j = ()=>{
 
     }else if(option === choices[7]){
         console.log("***************************************Program has now ended.***************************************")
+        
     }
    })
 }
