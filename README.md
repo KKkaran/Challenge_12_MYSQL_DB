@@ -1,7 +1,9 @@
 <h1 align='center'>Tequilla Corp. Employee-Tracking System<span><img src="icons/project.png" height="25" width="25"/></span></h1>
     <img src="https://img.shields.io/badge/License-ISC-blue.svg"/>
     <h2 id="description">Description</h2>
-    <p><img src="icons/search.png" height="18" width="20"/>In this system, we can perform CRUD operations on the data stored in the DB. The user is displayed with various options when the program begins. Depending on the choice, the data is displayed. Dont forget to checkout the bonus in the options. The app is also incorporated with recursive function which means the user will be displayed options until the user explicitly Quits.  </p>
+    <p><img src="icons/search.png" height="18" width="20"/>In this system, we can perform CRUD operations on the data stored in the DB. The user is displayed with various options when the program begins. Depending on the choice, the data is displayed. Dont forget to checkout the bonus in the options. The app is also incorporated with recursive function which means the user will be displayed options until the user explicitly Quits.
+    For the Challenge: All the bonus are done except the delete operation. Update manager is incorporated within the app and show employee by manager and department is done together. Watching the video before actually running the code will be more helpful and educational and will help understand the architecture of the code better.
+</p>
     <p>Link for video: <a href="https://drive.google.com/file/d/1g8u5y6cK1zI_4Rvrxkt94Vyc-5rR6HRT/view?usp=sharing" target="_blank">https://drive.google.com/file/d/1g8u5y6cK1zI_4Rvrxkt94Vyc-5rR6HRT/view?usp=sharing</a></p>
     <hr>
     <h2>Table of Contents</h2>
