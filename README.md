@@ -2,7 +2,7 @@
     <img src="https://img.shields.io/badge/License-ISC-blue.svg"/>
     <h2 id="description">Description</h2>
     <p><img src="icons/search.png" height="18" width="20"/>In this system, we can perform CRUD operations on the data stored in the DB. The user is displayed with various options when the program begins. Depending on the choice, the data is displayed. Dont forget to checkout the bonus in the options. The app is also incorporated with recursive function which means the user will be displayed options until the user explicitly Quits.  </p>
-    <p>Link for video: <a href="https://drive.google.com/file/d/1g8u5y6cK1zI_4Rvrxkt94Vyc-5rR6HRT/view?usp=sharing">https://drive.google.com/file/d/1g8u5y6cK1zI_4Rvrxkt94Vyc-5rR6HRT/view?usp=sharing</a></p>
+    <p>Link for video: <a href="https://drive.google.com/file/d/1g8u5y6cK1zI_4Rvrxkt94Vyc-5rR6HRT/view?usp=sharing" target="_blank">https://drive.google.com/file/d/1g8u5y6cK1zI_4Rvrxkt94Vyc-5rR6HRT/view?usp=sharing</a></p>
     <hr>
     <h2>Table of Contents</h2>
     <ul>
