@@ -1,8 +1,8 @@
 const inquirer = require("inquirer");
 const db = require("../db/connection");
 const mysql = require("mysql2");
-const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","QUIT"];
-console.log("********************************Welcome to the Employee Tracker App**********************************")
+const choices = ["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","****Bonus****","QUIT"];
+console.log("*********************Welcome to the Tequilla Corp. Employee Tracking System****************************")
 var g; //list of all departments
 //gets all the departments from db
 const getdepartment = async()=>{
@@ -37,7 +37,7 @@ const displayOptions = ()=>{
 
     return inquirer.prompt([
         {
-            type:"list",
+            type:"rawlist",
             name: "optionPicked",
             message:"Pick an option:",
             choices: choices
@@ -282,6 +282,7 @@ module.exports = {
     addEmployee: addEmployee,
     addRole: addRole,
     addDepartment:addDepartment,
+    getManager:getManager,
     choices: choices
 
 }

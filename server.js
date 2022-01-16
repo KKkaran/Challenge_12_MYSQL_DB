@@ -1,14 +1,9 @@
-const inquirer = require("inquirer");
-const express = require("express")
-const mysql = require("mysql2");
 const db = require("./db/connection");
 const table = require("string-table");
+const {bonus,choices2} = require("./src/bonus")
 const {displayOptions,updateEmp,addRole,addDepartment,addEmployee,choices} = require("./src")
 
-
-
 const j = ()=>{
-
     displayOptions().then(answers=>{
     const option = answers.optionPicked;
     const sql = "SELECT * FROM department";
@@ -19,7 +14,6 @@ const j = ()=>{
             console.log("\n\n")
             j();
         });
-        
     }else if(option === choices[1]){//show all roles
         const sql = "SELECT r.*, d.depart_name FROM role AS r LEFT JOIN department AS d ON r.department_id = d.id ORDER BY d.id;";
         db.query(sql, function (err, result, fields) {
@@ -85,27 +79,34 @@ const j = ()=>{
             })   
         });
 
-    }else if(option === choices[7]){
-        console.log("***************************************Program has now ended.***************************************")
-        
+    
+    
+    
+    
+    }else if(option === choices[7]){//go for bonus
+        bonus().then(a=>{
+            if(a.bonus === choices2[0]){
+                const sql = "SELECT e.id, e.first_name,e.last_name, r.title, r.salary, d.depart_name, concat(f.first_name,' ',f.last_name) as Manager from employee as e left join role as r on e.role_id = r.id left join department as d on r.department_id = d.id left join employee as f on e.manager_id = f.id;;"
+                db.query(sql, function (err, result, fields) {
+                    if (err) throw err;
+                    console.log(table.create(result));
+                    console.log("\n\n")
+                    j();
+                });
+            }else if(a.bonus === choices2[1]){
+                const sql = "select SUM(r.salary) as BUDGET, d.depart_name from employee as e inner join role as r on e.role_id = r.id inner join department as d on r.department_id = d.id group by d.depart_name;";
+                db.query(sql,function(err,result,fields){
+                    if(err) throw err;
+                    console.log(table.create(result));
+                    console.log("\n\n")
+                    j();
+                })
+            }
+        });
+    }else if(option === choices[8]){
+        console.log("***************************************Program has now ended.***************************************")  
     }
    })
 }
 j();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//BONUS EXERCISES:
-// view empl by manager-----> SELECT e.id, e.first_name,e.last_name, r.title, r.salary, d.depart_name, concat(f.first_name," ",f.last_name) as Manager from employee as e left join role as r on e.role_id = r.id left join department as d on r.department_id = d.id left join employee as f on e.manager_id = f.id where f.first_name = "Jessica";
